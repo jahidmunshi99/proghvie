@@ -2,8 +2,8 @@
 
 const AddButton = () => {
   const handleAddButton = () => {
+    console.log("clicked from add button");
     alert("clicked from Add Button");
-    console.log("clicked");
   };
 
   return (
