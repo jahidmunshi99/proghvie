@@ -1,43 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { addSeedBedItem, getFinancialYear } from "../utils/db.js";
 import SeedBedForm from "./forms/SeedBedForm.js";
-
-const data = [
-  {
-    id: 1,
-    year: "2024-25",
-    session: "Rabi",
-    upozila: "Kaliganj",
-    crop: "Rice",
-    land: "120 Acres",
-    seedbed: "15 Acres",
-    cultivation: "110 Acres",
-    production: "300 Tons",
-  },
-  {
-    id: 2,
-    year: "2024-25",
-    session: "Kharif",
-    upozila: "Gazipur Sadar",
-    crop: "Wheat",
-    land: "80 Acres",
-    seedbed: "10 Acres",
-    cultivation: "70 Acres",
-    production: "200 Tons",
-  },
-];
 
 const SeedBedTable = () => {
   const [show, setShow] = useState(false);
+  const [data, setData] = useState([]);
+  const [newItem, setNewItem] = useState({
+    seedbead_data: {
+      crop_name: "",
+      target: "",
+      achivement: "",
+      financial_year: "",
+      crop_session: "",
+    },
+    user_info: {
+      year: "",
+      session: "",
+      division: "",
+      district: "",
+      upozila: "",
+      user_name: "",
+      created_by: "",
+      created_at: new Date().getDate(),
+    },
+  });
+
+  //This handler control seedbed form modal
   const handleAddClose = () => {
     setShow(!show);
-    console.log("clicked");
+  };
+
+  // This effect using only for data fetching from firestore
+  useEffect(() => {
+    const getData = async () => {
+      const seedbed = await getFinancialYear();
+      setData(seedbed);
+    };
+    getData();
+  }, []);
+
+  //handle seedbeed data add and edit in database
+  const handleAddEdit = async (item) => {
+    await addSeedBedItem(item);
   };
 
   return (
     <>
-      {show && <SeedBedForm handleClose={handleAddClose} />}
+      {show && (
+        <SeedBedForm
+          handleClose={handleAddClose}
+          handleAddEdit={handleAddEdit}
+          newItem={newItem}
+          setNewItem={setNewItem}
+        />
+      )}
       <div className="bg-white p-6 rounded-xl shadow-sm overflow-x-auto">
         {/* Header */}
         <div className="flex justify-between mb-4">
@@ -72,14 +90,16 @@ const SeedBedTable = () => {
             {data.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{index + 1}</td>
-                <td className="px-4 py-3">{item.year}</td>
-                <td className="px-4 py-3">{item.session}</td>
-                <td className="px-4 py-3">{item.upozila}</td>
-                <td className="px-4 py-3">{item.crop}</td>
-                <td className="px-4 py-3">{item.land}</td>
+                <td className="px-4 py-3">
+                  {item.seedbead_data.financial_year}
+                </td>
+                <td className="px-4 py-3">{item.seedbead_data.crop_session}</td>
+                <td className="px-4 py-3">{item.user_info.upozila}</td>
+                <td className="px-4 py-3">{item.seedbead_data.crop_name}</td>
+                <td className="px-4 py-3">{item.seedbead_data.target}</td>
 
                 {/* New Columns */}
-                <td className="px-4 py-3">{item.seedbed}</td>
+                <td className="px-4 py-3">{item.seedbead_data.achivement}</td>
                 {/* Actions */}
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-center gap-3">

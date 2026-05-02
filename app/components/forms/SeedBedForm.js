@@ -1,33 +1,28 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { getFinancialYear } from "../../utils/db.js";
 import CloseButton from "../CloseButton.js";
+import SubmitButton from "../SubmitButton.js";
 
-const SeedBedForm = ({ handleClose }) => {
-  const [years, setYears] = useState([]);
-  const [formData, setFormData] = useState({
-    year: "",
-    session: "",
-    upozila: "",
-    crop: "",
-    land: "",
-    seedbed: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getFinancialYear();
-      setYears(result);
-    };
-    fetchData();
-  }, []);
-
+const SeedBedForm = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    let name = e.target.name;
+    let value = e.target.value;
+
+    if (name === "upozila") {
+      setNewItem((prev) => ({
+        ...prev,
+        user_info: {
+          ...prev.user_info,
+          [name]: value,
+        },
+      }));
+    } else {
+      setNewItem((prev) => ({
+        ...prev,
+        seedbead_data: {
+          ...prev.seedbead_data,
+          [name]: value,
+        },
+      }));
+    }
   };
 
   return (
@@ -63,7 +58,7 @@ const SeedBedForm = ({ handleClose }) => {
             type="text"
             name="upozila"
             placeholder="Upozila"
-            value={""}
+            value={newItem?.user_info?.upozila || ""}
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg"
             required
@@ -72,9 +67,9 @@ const SeedBedForm = ({ handleClose }) => {
           {/* Crop */}
           <input
             type="text"
-            name="crop"
+            name="crop_name"
             placeholder="Crop Name"
-            value={""}
+            value={newItem?.seedbead_data?.crop_name || ""}
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg"
             required
@@ -83,9 +78,9 @@ const SeedBedForm = ({ handleClose }) => {
           {/* Target */}
           <input
             type="text"
-            name="land"
+            name="target"
             placeholder="Target (e.g. 120 Acres)"
-            value={""}
+            value={newItem?.seedbead_data?.target || ""}
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg"
             required
@@ -94,9 +89,9 @@ const SeedBedForm = ({ handleClose }) => {
           {/* Achievement */}
           <input
             type="text"
-            name="seedbed"
+            name="achivement"
             placeholder="Achievement (e.g. 15 Acres)"
-            value={""}
+            value={newItem?.seedbead_data?.achivement || ""}
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg"
             required
@@ -105,13 +100,7 @@ const SeedBedForm = ({ handleClose }) => {
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-3">
             <CloseButton handleClose={handleClose} />
-
-            <button
-              type="submit"
-              className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700"
-            >
-              Save
-            </button>
+            <SubmitButton handleAddEdit={handleAddEdit} newItem={newItem} />
           </div>
         </form>
       </div>
