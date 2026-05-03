@@ -34,8 +34,7 @@ const SeedBedForm = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
           {/* Financial Year */}
           <input
             type="text"
-            name="f_year"
-            value={newItem?.seedbead_data?.f_year}
+            name="year"
             placeholder="Financial Year (e.g. 2024-25)"
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500"
@@ -44,7 +43,7 @@ const SeedBedForm = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
 
           {/* Session */}
           <select
-            name="crop_session"
+            name="session"
             onChange={handleChange}
             className="w-full border px-4 py-2 rounded-lg"
             required

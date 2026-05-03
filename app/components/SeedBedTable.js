@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addSeedBedItem, getFinancialYear } from "../utils/db.js";
+import { addSeedBedItem, getFinancialYear, deleteItem } from "../utils/db.js";
 import SeedBedForm from "./forms/SeedBedForm.js";
+import DeleteButton from "./DeleteButton.js"
 
 const SeedBedTable = () => {
   const [show, setShow] = useState(false);
@@ -12,11 +13,10 @@ const SeedBedTable = () => {
       crop_name: "",
       target: "",
       achivement: "",
-      financial_year: "",
+      f_year: "",
       crop_session: "",
     },
     user_info: {
-      year: "",
       session: "",
       division: "",
       district: "",
@@ -39,7 +39,7 @@ const SeedBedTable = () => {
       setData(seedbed);
     };
     getData();
-  }, []);
+  }, [data]);
 
   //handle seedbeed data add and edit in database
   const handleAddEdit = async (item) => {
@@ -91,7 +91,7 @@ const SeedBedTable = () => {
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{index + 1}</td>
                 <td className="px-4 py-3">
-                  {item.seedbead_data.financial_year}
+                  {item.seedbead_data.f_year}
                 </td>
                 <td className="px-4 py-3">{item.seedbead_data.crop_session}</td>
                 <td className="px-4 py-3">{item.user_info.upozila}</td>
@@ -107,9 +107,7 @@ const SeedBedTable = () => {
                       Edit
                     </button>
 
-                    <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-red-50 text-red-500 rounded-lg hover:bg-red-100">
-                      Delete
-                    </button>
+                    <DeleteButton deleteItem= {deleteItem} itemId= {item.id}/>
                   </div>
                 </td>
               </tr>
