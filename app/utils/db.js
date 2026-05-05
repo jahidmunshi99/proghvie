@@ -11,6 +11,8 @@ export const getFinancialYear = async () => {
   }));
 };
 
+
+// Fetch Seedbed Collections information
 export const addSeedBedItem = async (data) => {
   const docRef = await addDoc(collection(db, "reports"), data);
   console.log("Document written with ID: ", docRef.id);

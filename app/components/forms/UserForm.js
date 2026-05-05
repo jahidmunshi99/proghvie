@@ -1,6 +1,9 @@
 import React from 'react'
 
-const UserForm = () => {
+const UserForm = ({handleShow}) => {
+    const handleChange = ()=>{
+
+    }
   return (
 
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -59,52 +62,64 @@ const UserForm = () => {
             name="role"
             class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
-            <option value="division">Division</option>
-            <option value="district">District</option>
-            <option value="upazila" selected>Upazila</option>
+            <option value="division">Division Admin</option>
+            <option value="district">District Admin</option>
+            <option value="upazila" selected>Upazila Admin</option>
             </select>
         </div>
 
-        {/* <!-- Division --> */}
+
         <div className='grid grid-cols-3 gap-3'>
+            {/* <!-- Division --> */}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Division</label>
-                <input 
-                type="text" 
-                name="divisionId" 
-                placeholder="dhaka"
-                class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+                <select
+                name="divisionId"
+                onChange={handleChange}
+                className="w-full border px-4 py-2 rounded-lg"
+                required
+                >
+                <option value="">Select Division</option>
+                <option value="Rabi">Rabi</option>
+                <option value="Kharif">Kharif</option>
+                </select>
             </div>
 
             {/* <!-- District --> */}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
-                <input 
-                type="text" 
-                name="districtId" 
-                placeholder="gazipur"
-                class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+                <select
+                name="divisionId"
+                onChange={handleChange}
+                className="w-full border px-4 py-2 rounded-lg"
+                required
+                >
+                <option value="">Select district</option>
+                <option value="Rabi">Rabi</option>
+                <option value="Kharif">Kharif</option>
+                </select>
             </div>
-
             {/* <!-- Upazila --> */}
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Upazila</label>
-                <input 
-                type="text" 
-                name="upazilaId" 
-                placeholder="kaliganj"
-                class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+                <label class="block text-sm font-medium text-gray-700 mb-1">Upozila</label>
+                <select
+                name="upozilaId"
+                onChange={handleChange}
+                className="w-full border px-4 py-2 rounded-lg"
+                required
+                >
+                <option value="">Select Upozila</option>
+                <option value="Rabi">Rabi</option>
+                <option value="Kharif">Kharif</option>
+                </select>
             </div>
         </div>
+
 
         {/* Buttons */}
           <div className="flex justify-end gap-3 pt-3">
                     <button 
-            type="submit" 
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition" onClick={handleShow}
         >Cancel</button>
                 <button 
             type="submit" 
