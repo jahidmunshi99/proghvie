@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addSeedBedItem, getFinancialYear, deleteItem } from "../../utils/db.js";
+import { deleteItem, getFinancialYear } from "../../utils/db.js";
 // import SeedBedForm from "./forms/SeedBedForm.js";
-import DeleteButton from "../components/DeleteButton.js"
+import DeleteButton from "../components/DeleteButton.js";
 const CultivationTable = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
@@ -68,16 +68,16 @@ const CultivationTable = () => {
             {data.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{index + 1}</td>
+                <td className="px-4 py-3">{item?.seedbead_data?.f_year}</td>
                 <td className="px-4 py-3">
-                  {item.seedbead_data.f_year}
+                  {item?.seedbead_data?.crop_session}
                 </td>
-                <td className="px-4 py-3">{item.seedbead_data.crop_session}</td>
-                <td className="px-4 py-3">{item.user_info.upozila}</td>
-                <td className="px-4 py-3">{item.seedbead_data.crop_name}</td>
-                <td className="px-4 py-3">{item.seedbead_data.target}</td>
+                <td className="px-4 py-3">{item?.user_info?.upozila}</td>
+                <td className="px-4 py-3">{item?.seedbead_data?.crop_name}</td>
+                <td className="px-4 py-3">{item?.seedbead_data?.target}</td>
 
                 {/* New Columns */}
-                <td className="px-4 py-3">{item.seedbead_data.achivement}</td>
+                <td className="px-4 py-3">{item?.seedbead_data?.achivement}</td>
                 {/* Actions */}
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-center gap-3">
@@ -85,8 +85,7 @@ const CultivationTable = () => {
                       Edit
                     </button>
 
-                    <DeleteButton deleteItem= {deleteItem} itemId= {item.id}/>
-
+                    <DeleteButton deleteItem={deleteItem} itemId={item.id} />
                   </div>
                 </td>
               </tr>

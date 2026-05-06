@@ -12,7 +12,7 @@ import { db } from "../../config/env-local.js";
 
 //fetch years
 export const getFinancialYear = async () => {
-  const colRef = collection(db, "reports");
+  const colRef = collection(db, "targets");
   const snapshot = await getDocs(colRef);
 
   return snapshot.docs.map((doc) => ({
@@ -31,7 +31,6 @@ export const getUsers = async () => {
     ...doc.data(),
   }));
 };
-
 
 // Fetch Seedbed Collections information
 export const addSeedBedItem = async (data) => {
@@ -78,8 +77,6 @@ export const getUpozila = async () => {
     ...doc.data(),
   }));
 };
-
-
 
 // Add new User to DB
 export const addUser = async (user) => {

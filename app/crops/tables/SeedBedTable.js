@@ -1,12 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addSeedBedItem, getFinancialYear, deleteItem } from "../../utils/db.js";
+import { deleteItem, getFinancialYear } from "../../utils/db.js";
 // import SeedBedForm from "./forms/SeedBedForm.js";
-import DeleteButton from "../components/DeleteButton.js"
+import DeleteButton from "../components/DeleteButton.js";
 const SeedBedTable = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
+
+  const findYear = data.find(
+    (item) => item?.f_year === "2025-26" && item?.crop_session === "robi"
+    // && item?.category === "seedbed"
+  );
+
+  console.log(findYear);
+  console.log(findYear?.crop_type);
+  // console.log(data);
+
+  const crop = findYear?.crop_type;
+
+  const total = Object.values(crop || {}).reduce(
+    (sum, value) => sum + Number(value),
+    0
+  );
+
   const [newItem, setNewItem] = useState({
     seedbead_data: {
       crop_name: "",
@@ -19,10 +36,10 @@ const SeedBedTable = () => {
       session: "",
       division: "",
       district: "",
-      upozila: "",
+      upazilaId: "",
       user_name: "",
       created_by: "",
-      created_at: new Date().getDate(),
+      created_at: new Date().toISOString(),
     },
   });
 
@@ -34,11 +51,15 @@ const SeedBedTable = () => {
   // This effect using only for data fetching from firestore
   useEffect(() => {
     const getData = async () => {
-      const seedbed = await getFinancialYear();
-      setData(seedbed);
+      try {
+        const seedbed = await getFinancialYear();
+        setData(seedbed);
+      } catch (err) {
+        console.error(err);
+      }
     };
     getData();
-  }, [data]);
+  }, []);
 
   return (
     <>
@@ -68,16 +89,16 @@ const SeedBedTable = () => {
             {data.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{index + 1}</td>
-                <td className="px-4 py-3">
-                  {item.seedbead_data.f_year}
-                </td>
-                <td className="px-4 py-3">{item.seedbead_data.crop_session}</td>
-                <td className="px-4 py-3">{item.user_info.upozila}</td>
-                <td className="px-4 py-3">{item.seedbead_data.crop_name}</td>
-                <td className="px-4 py-3">{item.seedbead_data.target}</td>
+                <td className="px-4 py-3">{item?.f_year}</td>
+                <td className="px-4 py-3">{item?.crop_session}</td>
+                <td className="px-4 py-3">{item?.upazilaId}</td>
+                <td className="px-4 py-3">{item?.crop_name}</td>
+                <td className="px-4 py-3">{total}</td>
 
                 {/* New Columns */}
-                <td className="px-4 py-3">{item.seedbead_data.achivement}</td>
+                <td className="px-4 py-3">
+                  {item?.seedbead_data ? achivement : "-"}
+                </td>
                 {/* Actions */}
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-center gap-3">
@@ -85,8 +106,7 @@ const SeedBedTable = () => {
                       Edit
                     </button>
 
-                    <DeleteButton deleteItem= {deleteItem} itemId= {item.id}/>
-
+                    <DeleteButton deleteItem={deleteItem} itemId={item.id} />
                   </div>
                 </td>
               </tr>
