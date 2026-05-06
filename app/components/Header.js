@@ -1,22 +1,24 @@
+import Link from "next/link";
+
 const Header = () => {
   return (
     <header className="bg-sky-950 text-white border-b sticky top-0 z-50 py-2">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <ul className="flex justify-between items-center text-center gap-5">
           <li>
-            <a href="">Home</a>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <a href="">About</a>
+            <Link href="/crops">Crops</Link>
           </li>
           <li>
-            <a href="">Galary</a>
+            <Link href="/users">Users</Link>
           </li>
           <li>
-            <a href="">contact</a>
+            <Link href="">contact</Link>
           </li>
           <li>
-            <a href="">Blog</a>
+            <Link href="">Blog</Link>
           </li>
         </ul>
       </div>

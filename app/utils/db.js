@@ -7,6 +7,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../../config/env-local.js";
 
+//Fetch Data from DB
+// ==================================
+
+//fetch years
 export const getFinancialYear = async () => {
   const colRef = collection(db, "reports");
   const snapshot = await getDocs(colRef);
@@ -16,6 +20,18 @@ export const getFinancialYear = async () => {
     ...doc.data(),
   }));
 };
+
+//fetch users
+export const getUsers = async () => {
+  const colRef = collection(db, "users");
+  const snapshot = await getDocs(colRef);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+};
+
 
 // Fetch Seedbed Collections information
 export const addSeedBedItem = async (data) => {
@@ -62,6 +78,8 @@ export const getUpozila = async () => {
     ...doc.data(),
   }));
 };
+
+
 
 // Add new User to DB
 export const addUser = async (user) => {
