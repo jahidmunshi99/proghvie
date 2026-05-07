@@ -1,12 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { deleteItem, getFinancialYear } from "../../utils/db.js";
+import { deleteItem, getAchivement } from "../../utils/db.js";
 // import SeedBedForm from "./forms/SeedBedForm.js";
 import DeleteButton from "../components/DeleteButton.js";
 const CultivationTable = () => {
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
+  // const [cult, setCult] = useState([""])
+
+// if(data){
+//     const findCultivation = data.filter(
+//     (item) => item?.f_year === "2025-26" && item?.crop_session === "robi"
+//     && item?.category === "cutting"
+//   );
+
+  const filterData=  data.filter((item)=> item?.f_year === "2025-26" && item?.crop_session === "kharip-1"
+    && item?.category === "seedbed" )
+
+    console.log(filterData)
+
+const crop = filterData.reduce(
+  (acc, item) => ({
+    ...acc,
+    ...item.crop_type,
+  }),
+  {}
+);
+
+const total = Object.values(crop).reduce(
+  (sum, value) => sum + Number(value),
+  0
+);
+
+
+console.log(crop);
+
+  // console.log(total)
+
   const [newItem, setNewItem] = useState({
     seedbead_data: {
       crop_name: "",
@@ -19,10 +50,10 @@ const CultivationTable = () => {
       session: "",
       division: "",
       district: "",
-      upozila: "",
+      upazilaId: "",
       user_name: "",
       created_by: "",
-      created_at: new Date().getDate(),
+      created_at: new Date().toISOString(),
     },
   });
 
@@ -34,11 +65,15 @@ const CultivationTable = () => {
   // This effect using only for data fetching from firestore
   useEffect(() => {
     const getData = async () => {
-      const seedbed = await getFinancialYear();
-      setData(seedbed);
+      try {
+        const seedbed = await getAchivement();
+        setData(seedbed);
+      } catch (err) {
+        console.error(err);
+      }
     };
     getData();
-  }, [data]);
+  }, []);
 
   return (
     <>
@@ -65,19 +100,19 @@ const CultivationTable = () => {
 
           {/* Table Body */}
           <tbody className="divide-y">
-            {data.map((item, index) => (
+            {filterData.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium">{index + 1}</td>
-                <td className="px-4 py-3">{item?.seedbead_data?.f_year}</td>
-                <td className="px-4 py-3">
-                  {item?.seedbead_data?.crop_session}
-                </td>
-                <td className="px-4 py-3">{item?.user_info?.upozila}</td>
-                <td className="px-4 py-3">{item?.seedbead_data?.crop_name}</td>
-                <td className="px-4 py-3">{item?.seedbead_data?.target}</td>
+                <td className="px-4 py-3">{item?.f_year}</td>
+                <td className="px-4 py-3">{item?.crop_session}</td>
+                <td className="px-4 py-3">{item?.upazilaId}</td>
+                <td className="px-4 py-3">{item?.crop_name}</td>
+                <td className="px-4 py-3">{total}</td>
 
                 {/* New Columns */}
-                <td className="px-4 py-3">{item?.seedbead_data?.achivement}</td>
+                <td className="px-4 py-3">
+                  {item?.seedbead_data ? achivement : "-"}
+                </td>
                 {/* Actions */}
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-center gap-3">

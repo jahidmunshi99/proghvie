@@ -21,6 +21,16 @@ export const getFinancialYear = async () => {
   }));
 };
 
+export const getAchivement = async () => {
+  const colRef = collection(db, "achievements");
+  const snapshot = await getDocs(colRef);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+};
+
 //fetch users
 export const getUsers = async () => {
   const colRef = collection(db, "users");
