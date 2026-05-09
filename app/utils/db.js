@@ -93,3 +93,9 @@ export const addUser = async (user) => {
   const docRef = await addDoc(collection(db, "users"), user);
   console.log("Document written with ID: ", docRef.id);
 };
+
+// Add new Crops Target to DB
+export const addTarget = async (target) => {
+  const docRef = await addDoc(collection(db, "targets"), target);
+  console.log("Document written with ID: ", docRef.id);
+};

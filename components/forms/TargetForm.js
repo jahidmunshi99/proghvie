@@ -1,33 +1,45 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import { addTarget } from "../../app/utils/db.js";
 import { useCropList } from "../../app/utils/useCropList.js";
 import { useAllData } from "../../app/utils/useData.js";
+import { useFinancialYear } from "../../app/utils/useFinancialYear.js";
 import CloseButton from "../../components/buttons/CloseButton.js";
 import SubmitButton from "../../components/buttons/SubmitButton.js";
 
 const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
   const { divisions, districts, upazilas } = useAllData();
   const { crops } = useCropList();
+  const { fyear } = useFinancialYear();
+
+  const [items, setItems] = useState([
+    {
+      category: "seedbed",
+      createdBy: "",
+      crop_name: "",
+      crop_session: "",
+      crop_type: {
+        hybrid: "",
+        hyv: "",
+        local: "",
+      },
+      districtId: "",
+      divisionId: "",
+      f_year: "",
+      upazilaId: "",
+      createdAt: new Date().toDateString(),
+    },
+  ]);
+
+  const handleSubmitForm = () => {
+    addTarget();
+  };
 
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    if (name === "upozila") {
-      setNewItem((prev) => ({
-        ...prev,
-        user_info: {
-          ...prev.user_info,
-          [name]: value,
-        },
-      }));
-    } else {
-      setNewItem((prev) => ({
-        ...prev,
-        seedbead_data: {
-          ...prev.seedbead_data,
-          [name]: value,
-        },
-      }));
-    }
+    setItems({
+      [name]: value,
+    });
   };
 
   return (
@@ -37,16 +49,19 @@ const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
         <form className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             {/* Financial Year */}
-            <input
-              type="text"
+            <select
               name="f_year"
-              value={newItem?.seedbead_data?.f_year}
-              placeholder="Financial Year (e.g. 2024-25)"
               onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="w-full border px-4 py-2 rounded-lg"
               required
-            />
-
+            >
+              <option value="">Select Session</option>
+              {fyear?.map((item) => (
+                <option key={item.f_year} value={item.f_year}>
+                  {item.f_year}
+                </option>
+              ))}
+            </select>
             {/* Session */}
             <select
               name="crop_session"
@@ -55,8 +70,9 @@ const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
               required
             >
               <option value="">Select Session</option>
-              <option value="Rabi">Rabi</option>
-              <option value="Kharif">Kharif</option>
+              <option value="kharif-1">Kharif-1</option>
+              <option value="kharif-2">Kharif-2</option>
+              <option value="robi">Robi</option>
             </select>
           </div>
           <div className="grid grid-cols-3 gap-4">
