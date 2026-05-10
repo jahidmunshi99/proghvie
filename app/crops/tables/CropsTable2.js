@@ -1,12 +1,14 @@
 "use client";
 
-import { deleteItem, } from "../../utils/db.js";
+import { deleteItem } from "../../utils/db.js";
 // import SeedBedForm from "./forms/SeedBedForm.js";
-import DeleteButton from "../components/DeleteButton.js";
-const CropsTable = ({label, data}) => {
+import DeleteButton from "../../../components/buttons/DeleteButton.js";
+import EditButton from "../../../components/buttons/EditButton.js";
+import ViewButton from "../../../components/buttons/ViewButton.js";
 
+const CropsTable2 = ({ label, data }) => {
   const findYear = data.find(
-    (item) => item?.f_year === "2025-26" && item?.crop_session === "robi"
+    (item) => item?.f_year === "2025-26" && item?.crop_session === "robi",
     // && item?.category === "seedbed"
   );
 
@@ -18,15 +20,13 @@ const CropsTable = ({label, data}) => {
 
   const total = Object.values(crop || {}).reduce(
     (sum, value) => sum + Number(value),
-    0
+    0,
   );
-
 
   //This handler control seedbed form modal
   const handleAddClose = () => {
     setShow(!show);
   };
-
 
   return (
     <>
@@ -55,7 +55,9 @@ const CropsTable = ({label, data}) => {
           <tbody className="divide-y">
             {data.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium capitalize">{index + 1}</td>
+                <td className="px-4 py-3 font-medium capitalize">
+                  {index + 1}
+                </td>
                 <td className="px-4 py-3">{item?.f_year}</td>
                 <td className="px-4 py-3 capitalize">{item?.crop_session}</td>
                 <td className="px-4 py-3 capitalize">{item?.upazilaId}</td>
@@ -68,11 +70,9 @@ const CropsTable = ({label, data}) => {
                 </td>
                 {/* Actions */}
                 <td className="px-4 py-3">
-                  <div className="flex items-center justify-center gap-3">
-                    <button className="flex items-center gap-1 px-3 py-1.5 text-sm bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100">
-                      Edit
-                    </button>
-
+                  <div className="flex items-center justify-center gap-1">
+                    <ViewButton />
+                    <EditButton />
                     <DeleteButton deleteItem={deleteItem} itemId={item.id} />
                   </div>
                 </td>
@@ -86,4 +86,4 @@ const CropsTable = ({label, data}) => {
   );
 };
 
-export default CropsTable;
+export default CropsTable2;
