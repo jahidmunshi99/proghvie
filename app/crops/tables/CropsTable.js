@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { deleteItem, getFinancialYear } from "../../utils/db.js";
+import { deleteItem, } from "../../utils/db.js";
 // import SeedBedForm from "./forms/SeedBedForm.js";
 import DeleteButton from "../components/DeleteButton.js";
-const SeedBedTable = () => {
-  const [show, setShow] = useState(false);
-  const [data, setData] = useState([]);
+const CropsTable = ({label, data}) => {
 
   const findYear = data.find(
     (item) => item?.f_year === "2025-26" && item?.crop_session === "robi"
     // && item?.category === "seedbed"
   );
 
-  console.log(findYear);
+  console.log("this is from crop table" + data);
   console.log(findYear?.crop_type);
   // console.log(data);
 
@@ -30,25 +27,13 @@ const SeedBedTable = () => {
     setShow(!show);
   };
 
-  // This effect using only for data fetching from firestore
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const seedbed = await getFinancialYear();
-        setData(seedbed);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getData();
-  }, []);
 
   return (
     <>
       <div className="bg-white p-6 rounded-xl shadow-sm overflow-x-auto">
         {/* Header */}
         <div className="flex justify-between mb-4">
-          <h2 className="text-lg font-semibold">বীজতলা</h2>
+          <h2 className="text-lg font-semibold">{label}</h2>
         </div>
 
         <table className="min-w-full text-sm text-left">
@@ -70,11 +55,11 @@ const SeedBedTable = () => {
           <tbody className="divide-y">
             {data.map((item, index) => (
               <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium">{index + 1}</td>
+                <td className="px-4 py-3 font-medium capitalize">{index + 1}</td>
                 <td className="px-4 py-3">{item?.f_year}</td>
-                <td className="px-4 py-3">{item?.crop_session}</td>
-                <td className="px-4 py-3">{item?.upazilaId}</td>
-                <td className="px-4 py-3">{item?.crop_name}</td>
+                <td className="px-4 py-3 capitalize">{item?.crop_session}</td>
+                <td className="px-4 py-3 capitalize">{item?.upazilaId}</td>
+                <td className="px-4 py-3 capitalize">{item?.crop_name}</td>
                 <td className="px-4 py-3">{total}</td>
 
                 {/* New Columns */}
@@ -101,4 +86,4 @@ const SeedBedTable = () => {
   );
 };
 
-export default SeedBedTable;
+export default CropsTable;

@@ -8,6 +8,7 @@ export const useAllData = () => {
   const [divisions, setDivisions] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
+  const [categorys, setCategorys] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,6 +16,7 @@ export const useAllData = () => {
         const colRefdiv = collection(db, "division_data");
         const colRefdist = collection(db, "district_data");
         const colRefupaz = collection(db, "upozila_data");
+        const colRefcategorys = collection(db, "basic");
 
         const snapshotdiv = await getDocs(colRefdiv);
 
@@ -37,9 +39,17 @@ export const useAllData = () => {
           ...doc.data(),
         }));
 
+        const snapshotucategory = await getDocs(colRefcategorys);
+
+        const category_info = snapshotucategory.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
         setDivisions(div_info);
         setDistricts(dist_info);
         setUpazilas(upaz_info);
+        setCategorys(category_info);
       } catch (error) {
         console.log(error);
       }
@@ -52,5 +62,6 @@ export const useAllData = () => {
     divisions,
     districts,
     upazilas,
+    categorys,
   };
 };

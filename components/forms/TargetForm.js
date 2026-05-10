@@ -1,4 +1,6 @@
-import { Suspense, useState } from "react";
+"use client";
+
+import { useForm } from "react-hook-form";
 import { addTarget } from "../../app/utils/db.js";
 import { useCropList } from "../../app/utils/useCropList.js";
 import { useAllData } from "../../app/utils/useData.js";
@@ -6,15 +8,20 @@ import { useFinancialYear } from "../../app/utils/useFinancialYear.js";
 import CloseButton from "../../components/buttons/CloseButton.js";
 import SubmitButton from "../../components/buttons/SubmitButton.js";
 
-const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
-  const { divisions, districts, upazilas } = useAllData();
+const TargetFrom = ({ handleClose }) => {
+  const { divisions, districts, upazilas, categorys } = useAllData();
   const { crops } = useCropList();
   const { fyear } = useFinancialYear();
 
-  const [items, setItems] = useState([
-    {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
       category: "seedbed",
-      createdBy: "",
+      createdBy: "admin",
       crop_name: "",
       crop_session: "",
       crop_type: {
@@ -28,46 +35,39 @@ const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
       upazilaId: "",
       createdAt: new Date().toDateString(),
     },
-  ]);
+  });
 
-  const handleSubmitForm = () => {
-    addTarget();
-  };
-
-  const handleChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    setItems({
-      [name]: value,
-    });
+  const onSubmit = async (data) => {
+    console.log(data);
+    await addTarget(data);
+    reset();
+    handleClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg p-6 rounded-xl shadow-lg">
         <h2 className="text-lg font-semibold mb-4">Crops Target</h2>
-        <form className="space-y-4">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+          {/* Financial Year & Session */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Financial Year */}
             <select
-              name="f_year"
-              onChange={handleChange}
+              {...register("f_year", { required: true })}
               className="w-full border px-4 py-2 rounded-lg"
-              required
             >
-              <option value="">Select Session</option>
+              <option value="">Select Financial Year</option>
               {fyear?.map((item) => (
                 <option key={item.f_year} value={item.f_year}>
                   {item.f_year}
                 </option>
               ))}
             </select>
-            {/* Session */}
+
             <select
-              name="crop_session"
-              onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg"
-              required
+              {...register("crop_session", { required: true })}
+              className="w-full border px-4 py-2 rounded-lg capitalize"
             >
               <option value="">Select Session</option>
               <option value="kharif-1">Kharif-1</option>
@@ -75,108 +75,88 @@ const TargetFrom = ({ handleClose, handleAddEdit, newItem, setNewItem }) => {
               <option value="robi">Robi</option>
             </select>
           </div>
+
+          {/* Location */}
           <div className="grid grid-cols-3 gap-4">
-            {/* Division */}
-            <select
-              name="divisionId"
-              onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg capitalize"
-              required
-            >
-              <option value="">Select Division</option>
-              <Suspense>
-                {divisions.map((item) => (
-                  <option key={item.divisionId} value="Rabi">
-                    {item.divisionId}
-                  </option>
-                ))}
-              </Suspense>
+            <select {...register("divisionId")} className="border px-4 py-2 rounded-lg capitalize">
+              <option value="">Division</option>
+              {divisions?.map((item) => (
+                <option key={item.divisionId} value={item.divisionId}>
+                  {item.divisionId}
+                </option>
+              ))}
             </select>
-            {/* District */}
-            <select
-              name="districtId"
-              onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg capitalize"
-              required
-            >
-              <option value="">Select District</option>
-              <Suspense>
-                {districts.map((item) => (
-                  <option key={item.districtId} value="Rabi">
-                    {item.districtId}
-                  </option>
-                ))}
-              </Suspense>
+
+            <select {...register("districtId")} className="border px-4 py-2 rounded-lg capitalize">
+              <option value="">District</option>
+              {districts?.map((item) => (
+                <option key={item.districtId} value={item.districtId}>
+                  {item.districtId}
+                </option>
+              ))}
             </select>
-            {/* Upozila */}
-            <select
-              name="upazilaId"
-              onChange={handleChange}
-              className="w-full border px-4 py-2 rounded-lg capitalize"
-              required
-            >
-              <option value="">Select Upazila</option>
-              <Suspense>
-                {upazilas.map((item) => (
-                  <option key={item.upazilaId} value="Rabi">
-                    {item.upazilaId}
-                  </option>
-                ))}
-              </Suspense>
+
+            <select {...register("upazilaId")} className="border px-4 py-2 rounded-lg capitalize">
+              <option value="">Upazila</option>
+              {upazilas?.map((item) => (
+                <option key={item.upazilaId} value={item.upazilaId}>
+                  {item.upazilaId}
+                </option>
+              ))}
             </select>
           </div>
-          {/* Crop */}
-          <select
-            name="cropId"
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded-lg ca capitalize"
-            required
-          >
-            <option value="">Select Crop</option>
-            {crops.map((item) => (
-              <option key={item.cropId} value={item.cropId}>
-                {item.cropId}
-              </option>
-            ))}
-          </select>
 
-          {/* Seedbed Target */}
-          <input
-            type="text"
-            name="target"
-            placeholder="Seedbed Target (e.g. 120 Acres)"
-            value={newItem?.seedbead_data?.target || ""}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded-lg"
-            required
-          />
+          {/* Crop & Category */}
+          <div className="grid grid-cols-2 gap-4">
+            <select {...register("crop_name")} className="border px-4 py-2 rounded-lg capitalize">
+              <option value="">Select Crop</option>
+              {crops?.map((item) => (
+                <option key={item.cropId} value={item.cropId}>
+                  {item.cropId}
+                </option>
+              ))}
+            </select>
 
-          {/* Crop Swing Target */}
-          <input
-            type="text"
-            name="target"
-            placeholder="Crop Swing Target (e.g. 120 Acres)"
-            value={newItem?.seedbead_data?.target || ""}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded-lg"
-            required
-          />
-          {/* Achievement */}
-          {/* <input
-            type="text"
-            name="achivement"
-            placeholder="Achievement (e.g. 15 Acres)"
-            value={newItem?.seedbead_data?.achivement || ""}
-            onChange={handleChange}
-            className="w-full border px-4 py-2 rounded-lg"
-            required
-          /> */}
+            <select {...register("category")} className="border px-4 py-2 rounded-lg capitalize">
+              <option value="">Select Category</option>
+              {categorys?.map((item) => (
+                <option key={item.category} value={item.category}>
+                  {item.category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Nested Crop Type */}
+          <div className="grid grid-cols-3 gap-4">
+            <input
+              type="text"
+              placeholder="Hybrid Target"
+              {...register("crop_type.hybrid")}
+              className="border px-4 py-2 rounded-lg"
+            />
+
+            <input
+              type="text"
+              placeholder="HYV Target"
+              {...register("crop_type.hyv")}
+              className="border px-4 py-2 rounded-lg"
+            />
+
+            <input
+              type="text"
+              placeholder="Local Target"
+              {...register("crop_type.local")}
+              className="border px-4 py-2 rounded-lg"
+            />
+          </div>
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-3">
             <CloseButton handleClose={handleClose} />
-            <SubmitButton handleAddEdit={handleAddEdit} newItem={newItem} />
+            <SubmitButton />
           </div>
+
         </form>
       </div>
     </div>

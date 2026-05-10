@@ -11,7 +11,7 @@ import { db } from "../../config/env-local.js";
 // ==================================
 
 //fetch years
-export const getFinancialYear = async () => {
+export const getTarget = async () => {
   const colRef = collection(db, "targets");
   const snapshot = await getDocs(colRef);
 
@@ -96,6 +96,7 @@ export const addUser = async (user) => {
 
 // Add new Crops Target to DB
 export const addTarget = async (target) => {
+  console.log(target)
   const docRef = await addDoc(collection(db, "targets"), target);
   console.log("Document written with ID: ", docRef.id);
 };
