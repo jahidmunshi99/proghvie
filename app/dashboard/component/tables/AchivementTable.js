@@ -1,4 +1,4 @@
-export default function CropsTable() {
+export default function AchivementTable() {
   const data = [
     {
       id: 1,
