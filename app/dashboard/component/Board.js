@@ -8,7 +8,8 @@ import AchivementTable from "./tables/AchivementTable";
 
 const Board = () => {
   const [show, setShow] = useState(true);
-  const [editModal, setEditModal] = useState(false);
+  const [editModal, setEditModal] = useState(true);
+
   return (
     <>
       {show && <RecordDetailsModal />}

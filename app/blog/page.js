@@ -1,12 +1,11 @@
-import React from 'react'
-import BlogBoard from './components/BlogBoard'
+import BlogBoard from "./components/BlogBoard";
 
 const BlogPage = () => {
   return (
-    <div className='px-[5%] mt-8'>
-      <BlogBoard/>
+    <div className="px-[5%] py-7 min-h-screen bg-gray-300">
+      <BlogBoard />
     </div>
-  )
-}
+  );
+};
 
-export default BlogPage
+export default BlogPage;
