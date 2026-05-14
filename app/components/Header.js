@@ -23,6 +23,18 @@ const Header = () => {
           <li>
             <Link href="/dashboard">Dashboard</Link>
           </li>
+                    <li>
+            <Link href="/central">Central</Link>
+          </li>
+                    <li>
+            <Link href="/division">Division</Link>
+          </li>
+                    <li>
+            <Link href="/district">District</Link>
+          </li>
+                    <li>
+            <Link href="/upazila">Upazila</Link>
+          </li>
         </ul>
       </div>
     </header>
